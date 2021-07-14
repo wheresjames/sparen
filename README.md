@@ -14,7 +14,7 @@ and graph plot output.
 &nbsp;
 
 ---------------------------------------------------------------------
-## Examples
+## Install
 
     $ pip3 install .
 
