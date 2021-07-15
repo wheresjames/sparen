@@ -63,9 +63,9 @@ class Logging:
             if isinstance(s, Exception):
                 try:
                     tb = traceback.TracebackException.from_exception(s)
-                    st = str(tb._str)
+                    st = tb._str
                     if not st:
-                        st = str(tb.exe_type)
+                        st = str(s)
                     st += self.endl
                     for d in range(len(tb.stack)-1, -1, -1):
                         filename = os.path.basename(str(tb.stack[d][0]))
@@ -73,7 +73,6 @@ class Logging:
                         fname = str(tb.stack[d][2])
                         line = str(tb.stack[d][3])
                         st += " > %s(%s)::%s() %s%s" % (filename, lineno, fname, line, self.endl)
-
                     return "[EXCEPTION] " + st
                 except Exception as e:
                     return str("[EXCEPTION]" + traceback.format_exc())
@@ -220,3 +219,10 @@ def plotArray(a, fn = None, scalex = True, scaley = True, height = 12, width = 7
     ret += (' '*j) + '   ' + ''.join([(str((x+1)*10).rjust(9, ' ')+'^') for x in range(0, int(w/10))]) + "\n"
 
     return ret
+
+
+def listObjectAttributes(o):
+    s = ''
+    for a in dir(o):
+        s += "%s<%s>%s" % (a, type(getattr(o, a)).__name__, os.linesep)
+    return s

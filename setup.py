@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import os
 from setuptools import setup
 
 def readConfig(fname):
@@ -12,7 +13,16 @@ def readConfig(fname):
             cfg[k] = " ".join(parts).strip()
     return cfg
 
-cfg = readConfig('./sparen/PROJECT.txt')
+here = os.path.abspath(os.path.dirname(__file__))
+
+# Read in the config
+cfg = readConfig(os.path.join(here, 'sparen', 'PROJECT.txt'))
+
+# Read in the README
+with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+if not long_description:
+    long_description = cfg['description']
 
 setup(
     name=cfg['name'],
@@ -23,5 +33,7 @@ setup(
     author_email=cfg['email'],
     license=cfg['license'],
     packages=[cfg['name']],
-    include_package_data = True
+    include_package_data = True,
+    long_description=long_description,
+    long_description_content_type='text/markdown'
 )
