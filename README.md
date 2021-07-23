@@ -16,7 +16,7 @@ and graph plot output.
 ---------------------------------------------------------------------
 ## Install
 
-    $ pip3 install .
+    $ pip3 install sparen
 
 &nbsp;
 

@@ -1,4 +1,5 @@
 
+import os
 from . sparen import *
 
 def loadConfig(fname):
