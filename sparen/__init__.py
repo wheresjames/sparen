@@ -1,6 +1,7 @@
 
 import os
 from . sparen import *
+from . sparen_draw import *
 
 def loadConfig(fname):
     with open(fname) as f:

@@ -26,13 +26,15 @@ and graph plot output.
 
 ``` Python
 
-
     #----------------------------------------------------------------
     # The simple
 
     import sparen
     sparen.Log("Hello world!")
 
+```
+
+``` Python
 
     #----------------------------------------------------------------
     # More options
@@ -91,8 +93,6 @@ Output
 ```
     [21:10:12] test.py:main(18): sparen version: 0.1.1
 
-    [21:10:12] test.py:main(19): ['Log', 'Logging', '__author__', '__builtins__', '__cached__', '__company__', '__description__', '__doc__', '__email__', '__file__', '__license__', '__loader__', '__name__', '__package__', '__path__', '__spec__', '__url__', '__version__', 'datetime', 'functools', 'getframeinfo', 'inspect', 'loadConfig', 'os', 'plotArray', 'print_function', 'sparen', 'stack', 'sys', 'time', 'traceback']
-
     [21:10:12] test.py:main(29): Parameters: {
         "format": "error:red,warning:yellow,except:red",
         "logfile": ""
@@ -125,6 +125,159 @@ Output
     -10 :     ....                   ....                   ....
         ------------------------------------------------------------------------
                 10^       20^       30^       40^       50^       60^       70^
+
+```
+
+``` Python
+
+    #----------------------------------------------------------------
+    # Canvas drawing example
+
+    import sparen
+    Log = sparen.Log
+
+    def main():
+
+        # First example
+        canv = sparen.Canvas(width=80, height=25, charset=0)
+
+        canv.line(2, 2, 40, 2, '.')
+        canv.line(77, 2, 77, 12, '.')
+
+        canv.rect(4, 4, 20, 10, '.')
+        canv.line(4, 4, 20, 10, '.')
+
+        canv.fillRect(25, 6, 45, 14, '.')
+
+        canv.circle(60, 6, 5, '.')
+        canv.arc(60, 6, 5, 0, 180, '*')
+
+        canv.text(60, 6, "2")
+
+        canv.rect(10, 15, 50, 23, '.')
+        canv.textBox(11, 15, 49, 23, 'This is a lot of text just to see how well it fits in to the'
+                                    +' specified box, I could go on and on, and I will, because the'
+                                    +' point here is to make a really long string and not to not'
+                                    +' freak out people that do not like to see a lot of text.')
+
+        canv.rect(55, 15, 79, 23, '.')
+        canv.textBox(55, 15, 79, 23, 'ThisWordIsJustTooLongToFitOnOneLineAndMustBeForcefullySplit.\n'
+                                    +' So \n be \n it.')
+
+        Log("First Example\n", canv)
+
+
+        # Second example
+        canv = sparen.Canvas(width=80, height=25, charset=1)
+
+        canv.rect(4, 4, 20, 10)
+
+        canv.line(2, 6, 25, 6)
+        canv.line(4, 8, 20, 8)
+
+        canv.line(10, 2, 10, 12)
+        canv.line(16, 4, 16, 10)
+
+        canv.rect(44, 4, 60, 10)
+        canv.line(42, 4, 65, 4)
+        canv.line(42, 10, 68, 10)
+
+        canv.rect(24, 14, 40, 20)
+        canv.line(24, 12, 24, 22)
+        canv.line(40, 12, 40, 24)
+
+        canv.rect(45, 14, 65, 20)
+        canv.rect(50, 16, 70, 22)
+        canv.rect(55, 18, 75, 24)
+
+        Log("Second Example\n", canv)
+
+
+    if __name__ == '__main__':
+        main()
+
+```
+
+Output
+
+```
+[21:48:26] test.py:test_2(59): First Example
+                                                            .
+  ......................................               ... . . ...           .
+                                                     .             .         .
+    .................                               .               .        .
+    .  ...          .                              .                 .       .
+    .     ...       .    ....................     .*        2        **      .
+    .        ..     .    ....................      *                 *       .
+    .          ...  .    ....................       *               *        .
+    .             ...    ....................        *             *         .
+    .................    ....................          *** * * ***           .
+                         ....................               *                .
+                         ....................
+                         ....................
+
+          .........................................    .........................
+          . This is a lot of text just to see how .    .ThisWordIsJustTooLongTo.
+          . well it fits in to the specified box, .    .FitOnOneLineAndMustBeFo.
+          .   I could go on and on, and I will,   .    .    rcefullySplit.     .
+          .  because the point here is to make a  .    .          So           .
+          .   really long string and not to not   .    .          be           .
+          . freak out people that do not like to  .    .          it.          .
+          .          see a lot of text.           .    .                       .
+          .........................................    .........................
+
+
+[21:48:26] test.py:test_2(59): First Example (character set 2)
+                                                            ·
+  ═══════════════════════════════════════              ··· · · ···           ║
+                                                     ·             ·         ║
+    ╔═══════════════╗                               ·               ·        ║
+    ║····           ║                              ·                 ·       ║
+    ║    ····       ║    ████████████████████     ·*        2        **      ║
+    ║        ···    ║    ████████████████████      *                 *       ║
+    ║           ····║    ████████████████████       *               *        ║
+    ║              ·║    ████████████████████        *             *         ║
+    ╚═══════════════╝    ████████████████████          *** * * ***           ║
+                         ████████████████████               *                ║
+                         ████████████████████                                ║
+                         ████████████████████
+
+          ╔═══════════════════════════════════════╗    ╔═══════════════════════╗
+          ║ This is a lot of text just to see how ║    ║ThisWordIsJustTooLongTo║
+          ║ well it fits in to the specified box, ║    ║FitOnOneLineAndMustBeFo║
+          ║   I could go on and on, and I will,   ║    ║    rcefullySplit.     ║
+          ║  because the point here is to make a  ║    ║          So           ║
+          ║   really long string and not to not   ║    ║          be           ║
+          ║ freak out people that do not like to  ║    ║          it.          ║
+          ║          see a lot of text.           ║    ║                       ║
+          ╚═══════════════════════════════════════╝    ╚═══════════════════════╝
+
+
+[21:48:26] test.py:test_3(86): Second Example
+
+          │
+          │
+    ┌─────┼─────┬───┐                     ──┬───────────────┬─────
+    │     │     │   │                       │               │
+  ──┼─────┼─────┼───┼─────                  │               │
+    │     │     │   │                       │               │
+    ├─────┼─────┼───┤                       │               │
+    │     │     │   │                       │               │
+    └─────┼─────┴───┘                     ──┴───────────────┴────────
+          │
+          │             │               │
+                        │               │
+  ┌───────┬───────┐     ├───────────────┤    ┌───────────────────┐
+  │       │       │     │               │    │                   │
+  │       │       │     │               │    │    ┌──────────────┼────┐
+  │       │       │     │               │    │    │              │    │
+  ├───────┼───────┤     │               │    │    │    ┌─────────┼────┼────┐
+  │       │       │     │               │    │    │    │         │    │    │
+  │       │       │     ├───────────────┤    └────┼────┼─────────┘    │    │
+  │       │       │     │               │         │    │              │    │
+  └───────┴───────┘     │               │         └────┼──────────────┘    │
+                                        │              │                   │
+                                        │              └───────────────────┘
 
 ```
 

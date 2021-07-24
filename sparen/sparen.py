@@ -12,6 +12,8 @@ import traceback
 
 class Logging:
 
+    ''' Constructor
+    '''
     def __init__(self, dblspace=False):
         self.console_colors = {
             'BLACK'     : '\033[90m',
@@ -36,26 +38,68 @@ class Logging:
         self.logfile = ''
         self.dblspace = False
 
+    ''' Adds a single filter to colorize text
+        @param [in] f   - Case insensitive filter string,
+                          values can be any of
+                            black, red, green, yellow, blue,
+                            magenta, cyan, white, bold, faint,
+                            italic, underline, blink, strikeout
+
+        Example:
+        @begincode
+
+            # Color all strings containing 'error' red
+            addLogFilter("error:red")
+
+        @endcode
+    '''
     def addLogFilter(self, f):
         p = f.split(':')
         if 1 < len(p):
             self.console_color_filters[p[0]] = p[1:]
 
+    ''' Adds a list of filters to colorize text
+        @param [in] f   - Comma separated case insensitive filter strings
+                          values can be any of
+                            black, red, green, yellow, blue,
+                            magenta, cyan, white, bold, faint,
+                            italic, underline, blink, strikeout
+
+        Example:
+        @begincode
+
+            # Color all strings containing 'error' red, 'warning' yellow,
+            # Texts containing 'info' will blink
+            addLogFilter("error:red,warning:yellow,info:blink")
+
+        @endcode
+    '''
     def addLogFilters(self, f):
         p = f.split(',')
         if p:
             for v in p:
                 self.addLogFilter(v)
 
+    ''' Returns the active filter strings
+    '''
     def getLogFilters(self):
         return self.console_color_filters
 
+    ''' Sets a log file name
+        @param [in] fname   - File in which to write logs
+    '''
     def setLogFile(self, fname):
         self.logfile = fname
 
+    ''' Enable to add double spacing to log output
+    '''
     def setDoubleSpace(self, enable):
         self.dblspace = enable
 
+    ''' Internal log function allow the specification of the logging depth
+        @param [in] st      - Stack depth
+        @param [in] args    - Log message arguments to format
+    '''
     def _Log(self, st, *args):
 
         def formatStr(s):
@@ -137,17 +181,41 @@ class Logging:
                 f.write(ts + ls + s + self.endl + endl)
                 f.close()
 
+    ''' Log function
+        @param [in] args    - Log message arguments to format
+    '''
     def __call__(self, *args):
         self._Log(2, *args)
 
-    def showStatus(s, max=70):
-        print("\r" + s.ljust(max, ' '), end='')
+    ''' Output status string
+
+        This function will output the specified string,
+        forced to the specified length, and without a crlf
+
+        @param [in] s   - String to output
+        @param [in] mx  - Output string length
+    '''
+    def showStatus(s, mx=70):
+        print("\r" + s.ljust(mx, ' '), end='')
         sys.stdout.flush()
 
-
+''' Global logging object
+'''
 Log = Logging()
 
 
+''' Plots an array
+    @param [in] a       - Array data to plot
+    @param [in] fn      - Optional function for retrieving data elements
+    @param [in] scalex  - True to scale values to the x axis
+    @param [in] scaley  - True to scale values to the y axis
+    @param [in] height  - Height of the output plot
+    @param [in] width   - Width of the output plot
+    @param [in] plot    - Character to use to plot the data
+    @param [in] miny    - Minimum Y axis value
+    @param [in] maxy    - Maximum Y axis value
+    @param [in] marginy - Y axis top and bottom margin
+'''
 def plotArray(a, fn = None, scalex = True, scaley = True, height = 12, width = 70,
               plot='.', miny = 0, maxy = 100, marginy = 1):
 
@@ -220,7 +288,9 @@ def plotArray(a, fn = None, scalex = True, scaley = True, height = 12, width = 7
 
     return ret
 
-
+''' Returns a string listing object attributes and their type
+    @param [in] o   - Object to iterate
+'''
 def listObjectAttributes(o):
     s = ''
     for a in dir(o):
