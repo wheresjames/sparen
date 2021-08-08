@@ -1,30 +1,13 @@
+#!/usr/bin/env python3
 
-# sparen
+import json
+import argparse
+import numpy as np
 
-Create richer more helpful logs using terminal coloring, file saving,
-graph plotting, and ascii drawing.
-
----------------------------------------------------------------------
-## Table of contents
-
-* [Install](#install)
-* [Examples](#examples)
-* [References](#references)
-
-&nbsp;
-
----------------------------------------------------------------------
-## Install
-
-    $ pip3 install sparen
-
-&nbsp;
+import sparen
 
 
----------------------------------------------------------------------
-## Examples
-
-``` Python
+def main():
 
     #----------------------------------------------------------------
     # The simple
@@ -36,13 +19,9 @@ graph plotting, and ascii drawing.
         [21:24:31] demo.py:main(189): Hello world!
     '''
 
-```
-
-``` Python
-
     #----------------------------------------------------------------
     # Save to log file
-    sparen.log.setLogFile("application.log")
+    # sparen.log.setLogFile("application.log")
 
 
     #----------------------------------------------------------------
@@ -150,7 +129,7 @@ graph plotting, and ascii drawing.
 
     '''
         [21:24:31] demo.py:main(330): Canvas drawing 1
-                                                                    ·
+
           ═══════════════════════════════════════              ··· · · ···           ║
                                                              ·             ·         ║
             ╔═══════════════╗                               ·               ·        ║
@@ -235,17 +214,6 @@ graph plotting, and ascii drawing.
                                                 │              └───────────────────┘
     '''
 
-```
-
-&nbsp;
-
-
----------------------------------------------------------------------
-## References
-
-- Python
-    - https://www.python.org/
-
-- pip
-    - https://pip.pypa.io/en/stable/
+if __name__ == '__main__':
+    main()
 

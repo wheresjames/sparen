@@ -5,7 +5,7 @@ import argparse
 import numpy as np
 
 import sparen
-Log = sparen.Log
+Log = sparen.log
 
 def fun2():
     something = nogood
@@ -120,6 +120,66 @@ def test_4():
     Log("Second Example\n", canv)
 
 
+def test_5():
+
+    mins  = 60
+    hrs   = 60 * 60
+    days  = 24 * 60 * 60
+    years = 365 * 24 * 60 * 60
+
+    t = [
+            4 * hrs + 12 * mins + 23,                           # 04:12:23
+            4 * hrs + 12 * mins + 23 + 0.340,                   # 04:12:23.340
+            123 * days + 4 * hrs + 2 * mins + 6,                # 123 days 04:02:06
+            4 * years + 123 * days + 4 * hrs + 2 * mins + 6,    # 4 years, 123 days, 04:02:06
+
+    ]
+
+    ts = sparen.formatInterval(t[0])
+    Log(ts)
+    assert ts == "04:12:23"
+
+    ts = sparen.formatInterval(t[1], "$+H:$M:$S.$F", 3)
+    Log(ts)
+    assert ts == "04:12:23.340"
+
+    ts = sparen.formatInterval(t[1], "$+H:$M:$S.$f", 3)
+    Log(ts)
+    assert ts == "04:12:23.34"
+
+    ts = sparen.formatInterval(t[2], "$+H:$M:$S")
+    Log(ts)
+    assert ts == "2956:02:06"
+
+    ts = sparen.formatInterval(t[2], "$d days, $H:$M:$S")
+    Log(ts)
+    assert ts == "123 days, 04:02:06"
+
+    ts = sparen.formatInterval(t[2], "$d days, $h hours, $m minutes, $s seconds")
+    Log(ts)
+    assert ts == "123 days, 4 hours, 2 minutes, 6 seconds"
+
+    ts = sparen.formatInterval(t[3], "$y years, $d days, $h hours, $m minutes, $s seconds")
+    Log(ts)
+    assert ts == "4 years, 123 days, 4 hours, 2 minutes, 6 seconds"
+
+    ts = sparen.formatInterval(25.001, "$s.$f")
+    Log(ts)
+    assert ts == "25.001"
+
+    ts = sparen.formatInterval(25.0015, "$s.$f")
+    Log(ts)
+    assert ts == "25.002"
+
+    ts = sparen.formatInterval(25.0012345, "$s.$f", 4)
+    Log(ts)
+    assert ts == "25.0012"
+
+    ts = sparen.formatInterval(25.0012, "$s.$F", 6)
+    Log(ts)
+    assert ts == "25.001200"
+
+
 def main():
 
     Log("sparen version: %s" % sparen.__version__)
@@ -141,6 +201,7 @@ def main():
     test_2()
     test_3()
     test_4()
+    test_5()
 
 
 if __name__ == '__main__':

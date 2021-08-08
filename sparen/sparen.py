@@ -146,13 +146,15 @@ class Logging:
             try:
                 for k,v in self.console_color_filters.items():
                     if 0 <= s.lower().find(k.lower()):
-                        end = self.console_colors['DEFAULT']
                         for c in v:
                             c = c.upper()
                             if 'BLOCK' == c:
                                 return
                             elif c in self.console_colors:
                                 beg += self.console_colors[c]
+                                if not end:
+                                    end = self.console_colors['DEFAULT']
+
             except Exception as e:
                 print(e)
                 beg = ''
@@ -201,7 +203,8 @@ class Logging:
 
 ''' Global logging object
 '''
-Log = Logging()
+log = Logging()
+Log = log
 
 
 ''' Plots an array
@@ -296,3 +299,59 @@ def listObjectAttributes(o):
     for a in dir(o):
         s += "%s<%s>%s" % (a, type(getattr(o, a)).__name__, os.linesep)
     return s
+
+''' Returns a formated string of the specified time interval
+    @param [in] t   - Time interval in seconds
+    @param [in] fmt - Format string
+                        $s  - Seconds
+                        $S  - Seconds with leading zero
+                        $m  - Minutes
+                        $M  - Minutes with leading zero
+                        $h  - Hours
+                        $H  - Hours with leading zero
+                        $d  - Days
+                        $D  - Days with leading zero
+                        $y  - Years
+                        $Y  - Years with leading zero
+                        $f  - Decimal
+                        $F  - Decimal with trailing zeros
+                        $+_ - Show full value
+
+    @param [in] dec - Number of decimal digits to include
+
+    @begincode
+
+        print(formatInterval())
+
+    @encode
+'''
+def formatInterval(t, fmt="$+H:$M:$S", dec=3):
+
+    rep = {
+        "$f":   lambda t: ('{0:.%sf}'%dec).format(t-int(t))[2:].rstrip('0'),
+        "$F":   lambda t: ('{0:.%sf}'%dec).format(t-int(t))[2:].ljust(dec, '0'),
+        "$s":   lambda t: str(int(t) % 60),
+        "$+s":  lambda t: str(int(t)),
+        "$S":   lambda t: str(int(t) % 60).rjust(2,'0'),
+        "$+S":  lambda t: str(int(t)).rjust(2,'0'),
+        "$m":   lambda t: str(int(t / 60) % 60),
+        "$+m":  lambda t: str(int(t / 60)),
+        "$M":   lambda t: str(int(t / 60) % 60).rjust(2,'0'),
+        "$+M":  lambda t: str(int(t / 60)).rjust(2,'0'),
+        "$h":   lambda t: str(int(t / 60 / 60) % 24),
+        "$+h":  lambda t: str(int(t / 60 / 60)),
+        "$H":   lambda t: str(int(t / 60 / 60) % 24).rjust(2,'0'),
+        "$+H":  lambda t: str(int(t / 60 / 60)).rjust(2,'0'),
+        "$d":   lambda t: str(int(t / 24 / 60 / 60) % 365),
+        "$+d":  lambda t: str(int(t / 24 / 60 / 60)),
+        "$D":   lambda t: str(int(t / 24 / 60 / 60) % 365).rjust(3,'0'),
+        "$+D":  lambda t: str(int(t / 24 / 60 / 60)).rjust(3,'0'),
+        "$y":   lambda t: str(int(t / 365 / 24 / 60 / 60)),
+        "$Y":   lambda t: str(int(t / 365 / 24 / 60 / 60)).rjust(2,'0'),
+    }
+
+    for k,v in rep.items():
+        if 0 <= fmt.find(k):
+            fmt = fmt.replace(k, v(t))
+
+    return fmt
