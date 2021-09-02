@@ -179,9 +179,12 @@ class Logging:
 
         # Write to log file if needed
         if self.logfile:
-            with open(self.logfile, "a") as f:
-                f.write(ts + ls + s + self.endl + endl)
-                f.close()
+            try:
+                with open(self.logfile, "a") as f:
+                    f.write(ts + ls + s + self.endl + endl)
+                    f.close()
+            except Exception as e:
+                pass
 
     ''' Log function
         @param [in] args    - Log message arguments to format
