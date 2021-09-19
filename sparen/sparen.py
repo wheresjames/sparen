@@ -145,7 +145,7 @@ class Logging:
         if sys.stdout.isatty():
             try:
                 for k,v in self.console_color_filters.items():
-                    if 0 <= s.lower().find(k.lower()):
+                    if 0 <= s.lower().find(k.lower()) or 0 <= ls.lower().find(k.lower()):
                         for c in v:
                             c = c.upper()
                             if 'BLOCK' == c:

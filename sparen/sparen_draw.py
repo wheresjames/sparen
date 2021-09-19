@@ -270,7 +270,7 @@ class Canvas:
         @param [in] ch  - Character to fill the canvas with
     '''
     def erase(self, ch=' '):
-        self.fill(0, 0, self.nWidth, self.nHeight, ch)
+        self.fillRect(0, 0, self.nWidth, self.nHeight, ch)
 
 
     ''' Draws a rectangle outline with the specified character map
@@ -347,8 +347,8 @@ class Canvas:
         pts = int((r * 8) * a / pi2)
 
         for i in range(0, pts):
-            px = x + int(r * math.cos(s + i * a / pts) * ar)
-            py = y + int(r * math.sin(s + i * a / pts))
+            px = int(x + r * math.cos(s + i * a / pts) * ar)
+            py = int(y + r * math.sin(s + i * a / pts))
             self.setPoint(px, py, ch)
 
 
@@ -441,8 +441,6 @@ class Canvas:
 
         w = x2 - x1
         h = y2 - y1
-        cx = int(x1 + w / 2)
-        cy = int(y1 + h / 2)
 
         # Split the text into rows
         rows = self.splitText(txt, w)
