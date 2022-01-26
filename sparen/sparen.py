@@ -13,8 +13,29 @@ import traceback
 class Logging:
 
     ''' Constructor
+        @param [in] dblspace    - True to double space output
+        @param [in] linetmpl    - Line templates
+
+                                    ts          = timestamp
+                                    file        = filename
+                                    line        = line number
+                                    function    = Function name
+
+                                    Examples:
+                                        '[<<ts>>] <<file>>(<<line>>): '                 -> [10:06:37] ./test.py(147):
+                                        '[<<ts>>] <<file>>::<<function>>(<<line>>): '   -> [10:08:47] ./test.py::test_5(147):
+
+        @param [in] tstmpl      - Timestamp template
+                                    Examples:
+                                        '%H:%M:%S'
+
+        @param [in] reldir      - Relative directory to files to show in logs
+                                    None    = Full paths
+                                    '-'     = No paths
+                                    '.'     = Relative to current working directory
+                                    ...     = Relative to specified path
     '''
-    def __init__(self, dblspace=False):
+    def __init__(self, dblspace=False, linetmpl=None, tstmpl='%H:%M:%S', reldir='.'):
         self.console_colors = {
             'BLACK'     : '\033[90m',
             'RED'       : '\033[91m',
@@ -37,6 +58,12 @@ class Logging:
         self.endl = os.linesep
         self.logfile = ''
         self.dblspace = False
+        self.linetmpl = linetmpl
+        self.tstmpl = tstmpl
+        if reldir == '.':
+            self.reldir = os.getcwd()
+        else:
+            self.reldir = reldir
 
     ''' Adds a single filter to colorize text
         @param [in] f   - Case insensitive filter string,
@@ -136,7 +163,44 @@ class Logging:
 
         # Show file/function/line
         fi = inspect.getframeinfo(inspect.stack()[st][0])
-        ls = os.path.basename(fi.filename) + ":" + fi.function + "(" + str(fi.lineno) + "): "
+
+        full = fi.filename
+        path = os.path.dirname(full)
+
+        if self.reldir:
+            if '-' == self.reldir:
+                filename = os.path.basename(fi.filename)
+            else:
+                usefull = False
+                try:
+                    if full.split('/')[1] != self.reldir.split('/')[1]:
+                        usefull = True
+                except Exception as e:
+                    usefull = False
+
+                if usefull:
+                    filename = os.path.abspath(fi.filename)
+                else:
+                    filename = "./" + os.path.relpath(full, self.reldir)
+        else:
+            filename = os.path.abspath(fi.filename)
+
+        # Timestamp
+        if self.tstmpl:
+            ts = datetime.datetime.now().strftime(self.tstmpl)
+        else:
+            ts = ''
+
+        # Build template
+        if self.linetmpl:
+            ls = (self.linetmpl.replace('<<ts>>', ts)
+                               .replace('<<file>>', filename)
+                               .replace('<<line>>', str(fi.lineno))
+                               .replace('<<function>>', str(fi.function))
+                )
+        else:
+            ls = f'[{ts}] {filename}({fi.lineno}): '
+
         s = str(s)
 
         # Apply color filters
@@ -160,9 +224,6 @@ class Logging:
                 beg = ''
                 end = ''
 
-        # Timestamp
-        ts = datetime.datetime.now().strftime("[%H:%M:%S] ")
-
         # Context color
         sctx = ''
         ectx = ''
@@ -174,14 +235,14 @@ class Logging:
         endl = self.endl if self.dblspace else ''
 
         # Print the string
-        print(sctx + ts + ls + ectx + beg + s + end + endl)
+        print(sctx + ls + ectx + beg + s + end + endl)
         sys.stdout.flush()
 
         # Write to log file if needed
         if self.logfile:
             try:
                 with open(self.logfile, "a") as f:
-                    f.write(ts + ls + s + self.endl + endl)
+                    f.write(ls + s + self.endl + endl)
                     f.close()
             except Exception as e:
                 pass

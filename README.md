@@ -91,7 +91,7 @@ graph plotting, and ascii drawing.
 
     sparen.log(sparen.formatInterval(seconds, "$d days, $h hours, $m minutes, $s seconds"))
     '''
-        [21:24:31] demo.py:main(64): 14 days, 6 days, 56 minutes, 7 seconds
+        [21:24:31] demo.py:main(64): 14 days, 6 hours, 56 minutes, 7 seconds
     '''
 
     #----------------------------------------------------------------
